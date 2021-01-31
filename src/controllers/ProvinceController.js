@@ -1,7 +1,13 @@
 const knex = require('../config/database')
 
 class ProvinceController {
-    async index( _ , res ){
+    async index( req , res ){
+        if(Object.keys(req.query).length > 0){
+            return res.status(400).json({
+                message: "Bad request"
+            })
+        }
+
         try {
             let provinces = await knex('provinces');
 
@@ -20,7 +26,8 @@ class ProvinceController {
                 data
             })
 
-        } catch ( _ ) {
+        } catch ( err ) {
+            console.log(err)
             return res.status(500).json({
                 status: false,
                 message: 'Fetching data failed'
@@ -74,7 +81,8 @@ class ProvinceController {
                 message: 'Storing data success',
                 stored: { name, recovered, death, positive }
             })
-        }catch( e ){
+        }catch( err ){
+            console.log(err)
             return res.status(500).json({
                 status: false,
                 message: 'Storing data failed'
@@ -117,9 +125,15 @@ class ProvinceController {
                     death: province.death,
                     positive: province.positive
                 },
-                after: { name, recovered, death, positive }
+                after: { 
+                    name, 
+                    recovered: Number(recovered), 
+                    death: Number(death), 
+                    positive: Number(positive)
+                }
             })
-        }catch( e ){
+        }catch( err ){
+            console.log(err)
             return res.status(500).json({
                 status: false,
                 message: 'Updating data failed'
@@ -139,15 +153,12 @@ class ProvinceController {
                     message: 'Id not found'
                 })
             }
-
-            let date = new Date();
             
             await knex('recycle_bin').insert({
                 "name" : province.name,
                 "recovered" : province.recovered,
                 "death" : province.death,
-                "positive" : province.positive,
-                "deleted_at" : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+                "positive" : province.positive
             })
             
             await knex('provinces').where('id',id).del();
@@ -164,6 +175,7 @@ class ProvinceController {
             })
 
         } catch ( err ) {
+            console.log(err)
             return res.status(500).json({
                 status: false,
                 message: "Destroy data failed"

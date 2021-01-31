@@ -1,12 +1,6 @@
-const knex = require('knex')({
-    client: 'mysql',
-    connection: {
-      host: 'localhost',
-      port: '3306',
-      user: 'root',
-      password: '',
-      database: 'covid-api'
-    }
-})
+const environment = process.env.ENVIRONMENT || 'development'
+const config = require('../../knexfile')[environment]
+
+const knex = require('knex')(config)
 
 module.exports = knex
