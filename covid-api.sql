@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2021 at 11:21 AM
+-- Generation Time: Feb 01, 2021 at 05:47 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -47,7 +47,7 @@ CREATE TABLE `recycle_bin` (
   `recovered` int(11) NOT NULL,
   `death` int(11) NOT NULL,
   `positive` int(11) NOT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
+  `deleted_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
